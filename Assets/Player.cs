@@ -30,10 +30,6 @@ public class Player : MonoBehaviour
         dist3 = Vector3.Distance(image3.position, transform.position);
         dist4 = Vector3.Distance(image4.position, transform.position);
 
-
-        if (Button.activeSelf == false)
-            Scrollview.SetActive(false);
-
         Scrollview_Check();
         Painting_Name();
         Button_Trigger();
@@ -46,7 +42,6 @@ public class Player : MonoBehaviour
             Bottom_Left_Text.GetComponent<Text>().text = "Leonardo Da Vinci - Mona Lisa";
             RealDistance = dist1;
         }
-
 
         else if (dist2 < dist1 && dist2 < dist3 && dist2 < dist4)
         {
@@ -67,13 +62,18 @@ public class Player : MonoBehaviour
             Bottom_Left_Text.GetComponent<Text>().text = "Unreachable";
 
     }
+
     void Button_Trigger()
     {
         if ((dist1 < ButtonDistance) || (dist2 < ButtonDistance) || (dist3 < ButtonDistance) || (dist4 < ButtonDistance))
             Button.SetActive(true);
         else
+        {
+            Scrollview.GetComponent<Animator>().SetBool("Visible", false);
+            Scrollview.GetComponent<Animator>().SetBool("Invisible", true);
             Button.SetActive(false);
-    }
+        }
+}
 
     void Scrollview_Check()
     {
