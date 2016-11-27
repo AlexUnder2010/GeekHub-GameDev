@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+
+    float deltaTime = 0.0f;
+
     public GameObject Content;
     public GameObject Scrollview;
 
@@ -23,8 +26,32 @@ public class Player : MonoBehaviour
     private float dist3;
     private float dist4;
 
+    private float min;
+    private float curr;
+
+
+    void OnGUI()
+    {
+        int w = Screen.width, h = Screen.height;
+
+        GUIStyle style = new GUIStyle();
+
+        Rect rect = new Rect(0, 0, w, h * 2 / 100);
+        style.alignment = TextAnchor.UpperLeft;
+        style.fontSize = h * 2 / 100;
+        style.normal.textColor = new Color(0.0f, 0.0f, 0.5f, 1.0f);
+        float msec = deltaTime * 1000.0f;
+        float fps = 1.0f / deltaTime;
+        string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
+        GUI.Label(rect, text, style);
+    }
+
     void Update()
     {
+        deltaTime += (Time.deltaTime - deltaTime) * 0.1f;
+        min = Vector3.Distance(image1.position, transform.position);
+        curr = Vector3.Distance(image2.position, transform.position);
+
         dist1 = Vector3.Distance(image1.position, transform.position);
         dist2 = Vector3.Distance(image2.position, transform.position);
         dist3 = Vector3.Distance(image3.position, transform.position);
@@ -37,29 +64,27 @@ public class Player : MonoBehaviour
 
     void Painting_Name()
     {
-        if (dist1 < dist2 && dist1 < dist3 && dist1 < dist4)
+        string text = "Leonardo Da Vinci - Mona Lisa";
+        if (min > curr)
         {
-            Bottom_Left_Text.GetComponent<Text>().text = "Leonardo Da Vinci - Mona Lisa";
-            RealDistance = dist1;
+            text = "Unknown - Ship";
+            min = curr;
         }
+        curr = Vector3.Distance(image3.position, transform.position);
 
-        else if (dist2 < dist1 && dist2 < dist3 && dist2 < dist4)
+
+        if (min > curr)
         {
-            Bottom_Left_Text.GetComponent<Text>().text = "Unknown - Ship";
-            RealDistance = dist2;
+            text = "Victor Vasnetsov - Three Heroes";
+            min = curr;
         }
-        else if (dist3 < dist1 && dist3 < dist2 && dist3 < dist4)
+        curr = Vector3.Distance(image4.position, transform.position);
+
+        if (min > curr)
         {
-            Bottom_Left_Text.GetComponent<Text>().text = "Victor Vasnetsov - Three Heroes";
-            RealDistance = dist3;
+            text = "Edvard Munch - Skrik";
         }
-        else if (dist4 < dist1 && dist4 < dist3 && dist4 < dist2)
-        {
-            Bottom_Left_Text.GetComponent<Text>().text = "Edvard Munch - Skrik";
-            RealDistance = dist4;
-        }
-        else
-            Bottom_Left_Text.GetComponent<Text>().text = "Unreachable";
+        Bottom_Left_Text.GetComponent<Text>().text = text;
 
     }
 
